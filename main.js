@@ -5,6 +5,7 @@
 
 /* Put dependencies here */
 const canvas = require('canvas-wrapper'),
+    cheerio = require('cheerio'),
     asyncLib = require('async');
 
 
@@ -14,16 +15,24 @@ module.exports = (course, stepCallback) => {
     function getQuestions(quiz, questionCb) {
 
         function replaceHTML(question, replaceCb) {
-            var overlayHTML = `<div id="dialog_for_link_1" title="Title" class="enhanceable_content dialog">dialog</div><p><a id="${course.getOverlayCount}" class="Button" href="#dialog_for_link_1">prompt</a></p>`;
-            
+            if (/\/\/\s?(?:<|&lt;)!\[CDATA/.test(question.question_text)) {
+                /* Remove CDATA (old javascript) */
+                question.question_text = question.question_text.replace(/\/\/\s(?:&lt;|<)!\[CDATA\[[\s\S]+\/\/\s\]\](?:&gt;|>)/, '');
 
-            if (question.question_text.includes('// <![CDATA[')) {
-                question.question_text.replace(/\/\/\s<!\[CDATA\[[\s\S]+\/\/\s\]\]>/, '');
-                question.question_text.replace(/<p>(?:\s+)?CHECK MY WORK(?:\s+)?<\/p>/i, '');
+                /* Replace old HTML with new HTML */
+                var $ = cheerio.load(question.question_text),
+                    count = course.getCount(),
+                    buttonText = $('p[id*="toggleText"]').prev().text(),
+                    boxText = $('p[id*="toggleText"]').text();
+
+                $('p[id*="toggleText"]').prev().replaceWith(`<div id="dialog_for_link_${count}" title="${buttonText}" class="enhanceable_content dialog">${boxText}</div>`);
+                $('p[id*="toggleText"]').replaceWith(`<p><a id="link_${count}" class="Button" href="#dialog_for_link_${count}">${buttonText}</a></p>`);
+
+
                 canvas.put(`/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions/${question.id}`, {
                     'quiz_id': quiz.id,
                     'id': question.id,
-                    'question[question_text]': overlayHTML
+                    'question[question_text]': $.html()
                 }, (err) => {
                     if (err) {
                         course.throwErr('quizFixOverlay', `Unable to fix the overlay. Quiz: ${quiz.title} questionId${question.id}`);
@@ -34,13 +43,14 @@ module.exports = (course, stepCallback) => {
                     replaceCb(null);
                 });
             } else {
+                // should this really be dependant on CDATA
                 course.success('quizFixOverlay', `CDATA was not found in quiz: ${quiz.title} question: ${question.id}`);
+                replaceCb(null);
             }
-            replaceCb(null);
         }
 
 
-        canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}`, (err, questions) => {
+        canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
                 course.throwErr(`quizFixOverlay', 'Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}`);
                 questionCb(null, course);

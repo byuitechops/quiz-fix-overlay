@@ -10,6 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "async": "^2.5.0",
-    "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper.git"
+    "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper.git",
+    "cheerio": "^1.0.0-rc.2"
   }
 }
