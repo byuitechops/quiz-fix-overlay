@@ -1,7 +1,7 @@
 /*eslint-env node, es6*/
 
 /* Module Description */
-/* Replaces */
+/* Replaces old quiz overlays with the new quiz dialog (modals) */
 
 /* Put dependencies here */
 const canvas = require('canvas-wrapper'),
@@ -43,7 +43,7 @@ module.exports = (course, stepCallback) => {
                     replaceCb(null);
                 });
             } else {
-                // should this really be dependant on CDATA
+                // should this really be dependant on CDATA?
                 course.success('quizFixOverlay', `CDATA was not found in quiz: ${quiz.title} question: ${question.id}`);
                 replaceCb(null);
             }
