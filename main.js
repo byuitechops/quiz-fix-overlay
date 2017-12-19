@@ -43,12 +43,11 @@ module.exports = (course, stepCallback) => {
                     replaceCb(null);
                 });
             } else {
-                // should this really be dependant on CDATA?
+                // should this really be dependant on CDATA's existance?
                 course.success('quizFixOverlay', `CDATA was not found in quiz: ${quiz.title} question: ${question.id}`);
                 replaceCb(null);
             }
         }
-
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
@@ -56,7 +55,7 @@ module.exports = (course, stepCallback) => {
                 questionCb(null, course);
                 return;
             }
-            asyncLib.each(questions, replaceHTML, () => {
+            asyncLib.eachSeries(questions, replaceHTML, () => {
                 /* No errs should ever be passed to this point. Otherwise one failed question update will stop all questions from updating */
                 questionCb(null);
             })
@@ -71,9 +70,10 @@ module.exports = (course, stepCallback) => {
             stepCallback(null, course);
             return;
         }
-        asyncLib.each(quizzes, getQuestions, (err) => {
+        /* Process one quiz at a time in an attempt to go easier on the server */
+        asyncLib.eachSeries(quizzes, getQuestions, (err) => {
             if (err) {
-                // I don't think an err should ever really make it...
+                // I don't think an err should ever really make it here...
             }
             stepCallback(null, course);
         });
