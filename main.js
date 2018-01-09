@@ -51,7 +51,7 @@ module.exports = (course, stepCallback) => {
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
-                course.throwErr(`quizFixOverlay', 'Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}`);
+                course.throwErr('quizFixOverlay', 'Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}');
                 questionCb(null, course);
                 return;
             }
@@ -66,7 +66,7 @@ module.exports = (course, stepCallback) => {
     /* Get all quizzes in the course */
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
-            course.throwErr(`quizFixOverlay', 'Could not get quizzes from Canvas: ${err}`);
+            course.throwErr('quizFixOverlay', 'Could not get quizzes from Canvas: ${err}');
             stepCallback(null, course);
             return;
         }
