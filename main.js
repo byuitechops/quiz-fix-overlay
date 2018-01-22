@@ -10,7 +10,6 @@ const canvas = require('canvas-wrapper'),
 
 
 module.exports = (course, stepCallback) => {
-    course.addModuleReport('quizFixOverlay');
 
     function getQuestions(quiz, questionCb) {
 
@@ -35,23 +34,26 @@ module.exports = (course, stepCallback) => {
                     'question[question_text]': $.html()
                 }, (err) => {
                     if (err) {
-                        course.throwErr('quizFixOverlay', `Unable to fix the overlay. Quiz: ${quiz.title} questionId${question.id}`);
+                        course.error(`Unable to fix the overlay. Quiz: ${quiz.title} questionId${question.id}`);
                         replaceCb(null);
                         return;
                     }
-                    course.success('quizFixOverlay', `Updated overlay Quiz: ${quiz.title} questionId${question.id}`);
+                    course.log('Quiz Overlay Issues', {
+                        'Quiz Title': quiz.title,
+                        'Quiz ID': quiz.id,
+                        'Question ID': question.id,
+                        'Question Title': question.question_name
+                    })
                     replaceCb(null);
                 });
             } else {
-                // should this really be dependant on CDATA's existance?
-                course.success('quizFixOverlay', `CDATA was not found in quiz: ${quiz.title} question: ${question.id}`);
                 replaceCb(null);
             }
         }
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
-                course.throwErr('quizFixOverlay', `Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}`);
+                course.error(`Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}`);
                 questionCb(null, course);
                 return;
             }
@@ -66,7 +68,7 @@ module.exports = (course, stepCallback) => {
     /* Get all quizzes in the course */
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
-            course.throwErr('quizFixOverlay', `Could not get quizzes from Canvas: ${err}`);
+            course.error(`Could not get quizzes from Canvas: ${err}`);
             stepCallback(null, course);
             return;
         }
