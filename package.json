@@ -1,19 +1,30 @@
 {
-  "name": "quiz-fix-overlay",
-  "version": "1.0.0",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Daniel Green",
-  "license": "MIT",
-  "dependencies": {
-    "async": "^2.6.0",
-    "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper.git",
-    "cheerio": "^1.0.0-rc.2"
-  },
-  "devDependencies": {
-    "tap": "^10.7.2"
-  }
+    "name": "Quiz-fix-overlay",
+    "version": "1.0.0",
+    "description": "Convert overlay web feature into the new version",
+    "main": "main.js",
+    "dependencies": {
+        "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper",
+        "cheerio": "^1.0.0-rc.2"
+    },
+    "devDependencies": {
+        "async": "^2.6.0",
+        "child-development-kit": "github:byuitechops/child-development-kit",
+        "tap": "^10.7.3"
+    },
+    "scripts": {
+        "start": "node ./node_modules/child-development-kit/runChild.js",
+        "test": "tap ./node_modules/child-development-kit/testChild.js -T"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/byuitechops/quiz-fix-overlay.git"
+    },
+    "author": "Daniel Green",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/byuitechops/quiz-fix-overlay/issues"
+    },
+    "homepage": "https://github.com/byuitechops/quiz-fix-overlay#readme",
+    "childType": "postImport"
 }
