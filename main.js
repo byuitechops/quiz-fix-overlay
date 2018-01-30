@@ -24,10 +24,11 @@ module.exports = (course, stepCallback) => {
                     buttonText = $('p[id*="toggleText"]').prev().text(),
                     boxText = $('p[id*="toggleText"]').text();
 
+                    /* Cheerio Magic */
                 $('p[id*="toggleText"]').prev().replaceWith(`<div id="dialog_for_link_${count}" title="${buttonText}" class="enhanceable_content dialog">${boxText}</div>`);
                 $('p[id*="toggleText"]').replaceWith(`<p><a id="link_${count}" class="Button" href="#dialog_for_link_${count}">${buttonText}</a></p>`);
 
-
+                /* Apply changes */
                 canvas.put(`/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions/${question.id}`, {
                     'quiz_id': quiz.id,
                     'id': question.id,
@@ -38,12 +39,12 @@ module.exports = (course, stepCallback) => {
                         replaceCb(null);
                         return;
                     }
-                    course.log('Quiz Overlay Issues', {
+                    course.log('Quiz Overlays Updated', {
                         'Quiz Title': quiz.title,
                         'Quiz ID': quiz.id,
                         'Question ID': question.id,
                         'Question Title': question.question_name
-                    })
+                    });
                     replaceCb(null);
                 });
             } else {
@@ -53,19 +54,21 @@ module.exports = (course, stepCallback) => {
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
-                course.error(`Could not get quiz Questions from Canvas err: ${err}, quiz: ${quiz.title}`);
+                course.error(`Could not get quiz Questions from Canvas ${err}, quiz: ${quiz.title}`);
                 questionCb(null, course);
                 return;
             }
             asyncLib.eachSeries(questions, replaceHTML, () => {
                 /* No errs should ever be passed to this point. Otherwise one failed question update will stop all questions from updating */
                 questionCb(null);
-            })
+            });
         });
     }
 
-
-    /* Get all quizzes in the course */
+    /************************************
+     * START HERE
+     *  Get all quizzes in the course 
+     ************************************/
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
             course.error(`Could not get quizzes from Canvas: ${err}`);
