@@ -1,5 +1,5 @@
 {
-    "name": "Quiz-fix-overlay",
+    "name": "quiz-fix-overlay",
     "version": "1.0.0",
     "description": "Convert overlay web feature into the new version",
     "main": "main.js",
