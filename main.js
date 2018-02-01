@@ -35,7 +35,8 @@ module.exports = (course, stepCallback) => {
                     'question[question_text]': $.html()
                 }, (err) => {
                     if (err) {
-                        course.error(`Unable to fix the overlay. Quiz: ${quiz.title} questionId${question.id}`);
+                        // course.error(`Unable to fix the overlay. Quiz: ${quiz.title} questionId${question.id}`);
+                        course.error(err);
                         replaceCb(null);
                         return;
                     }
@@ -54,7 +55,8 @@ module.exports = (course, stepCallback) => {
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
-                course.error(`Could not get quiz Questions from Canvas ${err}, quiz: ${quiz.title}`);
+                // course.error(`Could not get quiz Questions from Canvas ${err}, quiz: ${quiz.title}`);
+                course.error(err);
                 questionCb(null, course);
                 return;
             }
@@ -71,7 +73,7 @@ module.exports = (course, stepCallback) => {
      ************************************/
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
-            course.error(`Could not get quizzes from Canvas: ${err}`);
+            course.error(err);
             stepCallback(null, course);
             return;
         }
