@@ -8,7 +8,6 @@ const canvas = require('canvas-wrapper'),
     cheerio = require('cheerio'),
     asyncLib = require('async');
 
-
 module.exports = (course, stepCallback) => {
 
     function getQuestions(quiz, questionCb) {
@@ -81,6 +80,7 @@ module.exports = (course, stepCallback) => {
         asyncLib.eachSeries(quizzes, getQuestions, (err) => {
             if (err) {
                 // I don't think an err should ever really make it here...
+                course.error(err);
             }
             stepCallback(null, course);
         });
