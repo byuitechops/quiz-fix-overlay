@@ -4,7 +4,7 @@
     "description": "Convert overlay web feature into the new version",
     "main": "main.js",
     "dependencies": {
-        "canvas-wrapper": "git+https://github.com/byuitechops/Canvas-wrapper",
+        "canvas-wrapper": "git+https://github.com/byuitechops/canvas-wrapper",
         "cheerio": "^1.0.0-rc.2"
     },
     "devDependencies": {
