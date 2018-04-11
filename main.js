@@ -70,6 +70,15 @@ module.exports = (course, stepCallback) => {
      * START HERE
      *  Get all quizzes in the course 
      ************************************/
+    /* Don't run in online courses */
+    var validPlatforms = ['online', 'pathway'];
+    if (!validPlatforms.includes(course.settings.platform)) {
+        course.message('Invalid platform. Skipping child module');
+        stepCallback(null, course);
+        return;
+    }
+
+    
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
             course.error(err);
