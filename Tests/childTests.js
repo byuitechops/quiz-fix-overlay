@@ -19,7 +19,7 @@ module.exports = (course, callback) => {
             return quizFile.dom.xml().includes('CDATA');
         });
 
-        //Grab all the question titles from the questions containing CDATA. This returns an array with arrays inside. We only want one.
+        //Grab all the question titles from the questions containing CDATA. This returns an array with arrays inside.
         var cdataQuestionNames = filteredQuizzes.map(quiz => {
             var $ = cheerio.load(quiz.dom.xml());
             var questionTitles = [];
