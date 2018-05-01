@@ -23,7 +23,7 @@ module.exports = (course, stepCallback) => {
                     buttonText = $('p[id*="toggleText"]').prev().text(),
                     boxText = $('p[id*="toggleText"]').text();
 
-                    /* Cheerio Magic */
+                /* Cheerio Magic */
                 $('p[id*="toggleText"]').prev().replaceWith(`<div id="dialog_for_link_${count}" title="${buttonText}" class="enhanceable_content dialog">${boxText}</div>`);
                 $('p[id*="toggleText"]').replaceWith(`<p><a id="link_${count}" class="Button" href="#dialog_for_link_${count}">${buttonText}</a></p>`);
 
@@ -54,7 +54,6 @@ module.exports = (course, stepCallback) => {
 
         canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes/${quiz.id}/questions`, (err, questions) => {
             if (err) {
-                // course.error(`Could not get quiz Questions from Canvas ${err}, quiz: ${quiz.title}`);
                 course.error(err);
                 questionCb(null, course);
                 return;
@@ -78,7 +77,7 @@ module.exports = (course, stepCallback) => {
         return;
     }
 
-    
+
     canvas.get(`https://byui.instructure.com/api/v1/courses/${course.info.canvasOU}/quizzes`, (err, quizzes) => {
         if (err) {
             course.error(err);
